@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Helper - Home</title>
+    <link rel="stylesheet" href="{% static 'medical_helper_app/css/styles.css' %}">
+</head>
+<body>
+    <h1>Welcome to Medical Helper</h1>
+    {% if user.is_authenticated %}
+        <p>Hello, {{ user.first_name }}!</p>
+
+        <h2>Your Dosages</h2>
+        <table border="1">
+            <tr>
+                <th>Drug Name</th>
+                <th>Starting Dose</th>
+                <th>Min Dose</th>
+                <th>Max Dose</th>
+                <th>Elderly Dose</th>
+                <th>Other Adjustments</th>
+            </tr>
+            {% for dosage in dosages %}
+            <tr>
+                <td>{{ dosage.drug.name }}</td>
+                <td>{{ dosage.starting_dose }}</td>
+                <td>{{ dosage.min_dose }}</td>
+                <td>{{ dosage.max_dose }}</td>
+                <td>{{ dosage.elderly_dose }}</td>
+                <td>{{ dosage.other_adjustments }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Your Side Effects</h2>
+        <table border="1">
+            <tr>
+                <th>Drug Name</th>
+                <th>Effect Description</th>
+                <th>Probability</th>
+            </tr>
+            {% for side_effect in side_effects %}
+            <tr>
+                <td>{{ side_effect.drug.name }}</td>
+                <td>{{ side_effect.effect_description }}</td>
+                <td>{{ side_effect.probability }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Your Notes</h2>
+        <table border="1">
+            <tr>
+                <th>Drug Name</th>
+                <th>Content</th>
+                <th>Theme</th>
+            </tr>
+            {% for note in notes %}
+            <tr>
+                <td>{{ note.drug.name }}</td>
+                <td>{{ note.content }}</td>
+                <td>{{ note.theme.name }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <a href="{% url 'dosage' %}">Add a Dosage</a><br>
+        <a href="{% url 'side_effects' %}">Add a Side Effect</a><br>
+        <a href="{% url 'notes' %}">Add a Note</a><br>
+    {% else %}
+        <p>Please <a href="{% url 'login' %}">log in</a> or <a href="{% url 'register' %}">register</a>.</p>
+    {% endif %}
+</body>
+</html>

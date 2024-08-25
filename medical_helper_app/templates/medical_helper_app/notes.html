@@ -1,0 +1,20 @@
+<!-- medical_helper_app/templates/medical_helper_app/notes.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes Form</title>
+    <link rel="stylesheet" href="{% static 'medical_helper_app/css/styles.css' %}">
+</head>
+<body>
+    <h1>Notes Form</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html>
