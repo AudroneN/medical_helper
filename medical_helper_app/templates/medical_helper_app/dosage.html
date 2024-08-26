@@ -1,19 +1,19 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dosage Form</title>
-    <link rel="stylesheet" href="{% static 'medical_helper_app/css/styles.css' %}">
-</head>
-<body>
-    <h1>Dosage Form</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
-    <a href="{% url 'home' %}">Back to Home</a>
-</body>
-</html>
+{% extends 'medical_helper_app/base.html' %}
+
+{% block title %}Dosage Form - Medical Helper{% endblock %}
+
+{% block content %}
+<h1>Dosage Form</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.new_drug_name.label_tag }} {{ form.new_drug_name }}<br>
+    {{ form.starting_dose.label_tag }} {{ form.starting_dose }}<br>
+    {{ form.min_dose.label_tag }} {{ form.min_dose }}<br>
+    {{ form.max_dose.label_tag }} {{ form.max_dose }}<br>
+    {{ form.elderly_dose.label_tag }} {{ form.elderly_dose }}<br>
+    {{ form.other_adjustments.label_tag }} {{ form.other_adjustments }}<br>
+    <button type="submit">Submit</button>
+</form>
+<a href="{% url 'home' %}">Back to Home</a>
+{% endblock content %}

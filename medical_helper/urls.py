@@ -22,7 +22,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),  # Admin route
     path('', views.home, name='home'),  # Home page
     path('register/', views.register, name='register'),  # Custom registration page
-    path('login/', views.custom_login, name='login'),  # Custom login page
+    path('login/', views.login_view, name='login'),  # Custom login page
+    path('logout/', views.custom_logout, name='logout'), 
+    
     path('dosage/', views.dosage_view, name='dosage'),  # Dosage form page
     path('side_effects/', views.side_effect_view, name='side_effects'),  # Side effects form page
     path('notes/', views.notes_view, name='notes'),  # Notes form page

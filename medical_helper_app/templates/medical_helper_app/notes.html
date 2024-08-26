@@ -1,20 +1,16 @@
-<!-- medical_helper_app/templates/medical_helper_app/notes.html -->
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes Form</title>
-    <link rel="stylesheet" href="{% static 'medical_helper_app/css/styles.css' %}">
-</head>
-<body>
-    <h1>Notes Form</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
-    <a href="{% url 'home' %}">Back to Home</a>
-</body>
-</html>
+{% extends 'medical_helper_app/base.html' %}
+
+{% block title %}Notes Form - Medical Helper{% endblock %}
+
+{% block content %}
+<h1>Notes Form</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.new_drug_name.label_tag }} {{ form.new_drug_name }}<br>
+    {{ form.content.label_tag }} {{ form.content }}<br>
+    {{ form.new_theme_name.label_tag }} {{ form.new_theme_name }}<br>
+    <button type="submit">Submit</button>
+</form>
+<a href="{% url 'home' %}">Back to Home</a>
+{% endblock content %}

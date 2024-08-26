@@ -1,20 +1,14 @@
 <!-- medical_helper_app/templates/medical_helper_app/side_effects.html -->
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Side Effects Form</title>
-    <link rel="stylesheet" href="{% static 'medical_helper_app/css/styles.css' %}">
-</head>
-<body>
-    <h1>Side Effects Form</h1>
+{% extends 'medical_helper_app/base.html' %}
+
+{% block title %}Dosage Form - Medical Helper{% endblock %}
+
+{% block content %}
+<h1>Side Effects Form</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Submit</button>
     </form>
     <a href="{% url 'home' %}">Back to Home</a>
-</body>
-</html>
+    {% endblock content %}

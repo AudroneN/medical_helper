@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, DosageForm, SideEffectForm, NoteForm, ThemeForm
 from .models import Dosage, SideEffect, Note, Theme
@@ -10,19 +10,53 @@ from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, DosageForm, SideEffectForm, NoteForm, DrugForm
 from .models import Dosage, SideEffect, Note, Drug, Theme
 
+def register(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'medical_helper_app/register.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = CustomAuthenticationForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            else:
+                form.add_error(None, 'Invalid username or password')
+    else:
+        form = CustomAuthenticationForm()
+    return render(request, 'medical_helper_app/login.html', {'form': form})
+
+@login_required
+def custom_logout(request):
+    logout(request)
+    return redirect('login')
+
 @login_required
 def home(request):
     dosages = Dosage.objects.filter(user=request.user)
     side_effects = SideEffect.objects.filter(user=request.user)
     notes = Note.objects.filter(user=request.user)
-
+    
     context = {
         'dosages': dosages,
         'side_effects': side_effects,
         'notes': notes,
     }
     return render(request, 'medical_helper_app/index.html', context)
-
 @login_required
 def dosage_view(request):
     if request.method == 'POST':
@@ -52,43 +86,13 @@ def side_effect_view(request):
 @login_required
 def notes_view(request):
     if request.method == 'POST':
-        form = NoteForm(request.POST)
+        form = NoteForm(request.POST, user=request.user)  # Pass the user to the form
         if form.is_valid():
-            note = form.save(commit=False)
-            note.user = request.user
-            note.save()
+            form.save()
             return redirect('home')
     else:
-        form = NoteForm()
+        form = NoteForm(user=request.user)  # Pass the user to the form
     return render(request, 'medical_helper_app/notes.html', {'form': form})
-
-
-# Register View
-def register(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('home')
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'registration.html', {'form': form})
-
-# Login View
-def custom_login(request):
-    if request.method == 'POST':
-        form = CustomAuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-            if user is not None:
-                login(request, user)
-                return redirect('home')
-    else:
-        form = CustomAuthenticationForm()
-    return render(request, 'medical_helper_app/login.html', {'form': form})
-
-
 
 # Email Content View
 @login_required
@@ -113,7 +117,7 @@ def send_content_via_email(request):
         send_mail(
             'Your Medical Helper Information',
             email_content,
-            'from@example.com',
+            'audra991@yahoo.com',
             [request.user.email],
             fail_silently=False,
         )
